@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Basic Project Information -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-maven-app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <!-- Maven Repositories -->
+    <repositories>
+        <repository>
+            <id>nexus-public</id>
+            <url>http://nexus-server/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <!-- Build Plugins -->
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source> <!-- Java version used in your project -->
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Deploy Plugin (for Nexus artifact deployment) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Docker Maven Plugin (to build Docker images from Maven) -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>  <!-- This builds the Docker image -->
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <imageName>my-maven-image</imageName>  <!-- Docker image name -->
+                    <dockerDirectory>${project.basedir}</dockerDirectory>  <!-- Directory containing Dockerfile -->
+                </configuration>
+            </plugin>
+
+            <!-- SonarQube Plugin for code quality analysis -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <!-- Maven Profiles (Optional - for different environments or deployment stages) -->
+    <profiles>
+        <profile>
+            <id>deploy-to-nexus</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Nexus Repository Configuration -->
+                <nexus.repoUrl>http://nexus-server/repository/maven-releases/</nexus.repoUrl>
+                <nexus.username>${env.NEXUS_USERNAME}</nexus.username>
+                <nexus.password>${env.NEXUS_PASSWORD}</nexus.password>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!-- Nexus Deployment Configuration -->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://nexus-server/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://nexus-server/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!-- Properties -->
+    <properties>
+        <java.version>11</java.version> <!-- Java version -->
+        <sonar.host.url>http://sonarqube-server</sonar.host.url>  <!-- SonarQube server URL -->
+    </properties>
+
+</project>
+
