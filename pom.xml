@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
@@ -9,65 +10,54 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>my-maven-app</name>
-    <description>My Maven Application</description>
+    <name>My Maven App</name>
+    <url>http://maven.apache.org</url>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
-        <relativePath/> <!-- Lookup parent from repository -->
-    </parent>
-
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-    </properties>
+    <repositories>
+        <repository>
+            <id>mojo-repo</id>
+            <url>https://repository.codehaus.org</url>
+        </repository>
+    </repositories>
 
     <dependencies>
+        <!-- Your application dependencies go here -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+            <version>2.5.4</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Maven Surefire Plugin for tests (skip tests in certain stages) -->
+            <!-- SonarQube plugin for analysis -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-
-            <!-- SonarQube Maven Plugin -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
+                <groupId>org.sonarsource</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
             </plugin>
 
-            <!-- OWASP Dependency Check Plugin (version updated) -->
+            <!-- Dependency Check plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>6.5.0</version> <!-- Updated to a stable version -->
+                <version>5.3.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -77,47 +67,7 @@
                 </executions>
             </plugin>
 
-            <!-- Maven Compiler Plugin to set Java version -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <!-- Maven Clean Plugin to clean the project -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-
-            <!-- Maven Jar Plugin to build a JAR file -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-
+            <!-- Other plugins like compiler, jar packaging, etc. -->
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <!-- Reports for Dependency Check -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>6.5.0</version>
-                <configuration>
-                    <format>HTML</format>
-                    <outputDirectory>${project.build.directory}/dependency-check-report</outputDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>
