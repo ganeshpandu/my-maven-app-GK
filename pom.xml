@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version> <!-- Use the appropriate Spring Boot version -->
+        <version>2.7.5</version>
         <relativePath/> <!-- Lookup parent from repository -->
     </parent>
 
@@ -26,7 +26,6 @@
     </properties>
 
     <dependencies>
-        <!-- Example dependencies with no version defined, as version is provided by Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -43,7 +42,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
-        <!-- Add any other required dependencies -->
     </dependencies>
 
     <build>
@@ -65,11 +63,11 @@
                 <version>3.9.1.2184</version>
             </plugin>
 
-            <!-- OWASP Dependency Check Plugin -->
+            <!-- OWASP Dependency Check Plugin (version updated) -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>7.0.0</version>
+                <version>6.5.0</version> <!-- Updated to a stable version -->
                 <executions>
                     <execution>
                         <goals>
@@ -104,27 +102,6 @@
                 <version>3.1.0</version>
             </plugin>
 
-            <!-- Dockerfile Maven Plugin (if applicable) -->
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Maven Dependency Plugin (for clean builds) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
-
         </plugins>
     </build>
 
@@ -134,7 +111,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>7.0.0</version>
+                <version>6.5.0</version>
                 <configuration>
                     <format>HTML</format>
                     <outputDirectory>${project.build.directory}/dependency-check-report</outputDirectory>
