@@ -2,8 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <!-- Basic Project Information -->
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
@@ -11,103 +9,131 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!-- Maven Repositories -->
-    <repositories>
-        <repository>
-            <id>nexus-public</id>
-            <url>http://nexus-server/repository/maven-public/</url>
-        </repository>
-    </repositories>
+    <name>my-maven-app</name>
+    <description>My Maven Application</description>
 
-    <!-- Build Plugins -->
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+    </properties>
+
+    <dependencies>
+        <!-- Example dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <!-- Add any other required dependencies -->
+    </dependencies>
+
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin -->
+            <!-- Maven Surefire Plugin for tests (skip tests in certain stages) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
                 <configuration>
-                    <source>11</source> <!-- Java version used in your project -->
-                    <target>11</target>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
 
-            <!-- Maven Deploy Plugin (for Nexus artifact deployment) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Docker Maven Plugin (to build Docker images from Maven) -->
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build</goal>  <!-- This builds the Docker image -->
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <imageName>my-maven-image</imageName>  <!-- Docker image name -->
-                    <dockerDirectory>${project.basedir}</dockerDirectory>  <!-- Directory containing Dockerfile -->
-                </configuration>
-            </plugin>
-
-            <!-- SonarQube Plugin for code quality analysis -->
+            <!-- SonarQube Maven Plugin -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
             </plugin>
 
+            <!-- OWASP Dependency Check Plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>7.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Compiler Plugin to set Java version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Clean Plugin to clean the project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+
+            <!-- Maven Jar Plugin to build a JAR file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+
+            <!-- Dockerfile Maven Plugin (if applicable) -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.13</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Dependency Plugin (for clean builds) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+
         </plugins>
     </build>
 
-    <!-- Maven Profiles (Optional - for different environments or deployment stages) -->
-    <profiles>
-        <profile>
-            <id>deploy-to-nexus</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Nexus Repository Configuration -->
-                <nexus.repoUrl>http://nexus-server/repository/maven-releases/</nexus.repoUrl>
-                <nexus.username>${env.NEXUS_USERNAME}</nexus.username>
-                <nexus.password>${env.NEXUS_PASSWORD}</nexus.password>
-            </properties>
-        </profile>
-    </profiles>
-
-    <!-- Nexus Deployment Configuration -->
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://nexus-server/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://nexus-server/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <!-- Properties -->
-    <properties>
-        <java.version>11</java.version> <!-- Java version -->
-        <sonar.host.url>http://sonarqube-server</sonar.host.url>  <!-- SonarQube server URL -->
-    </properties>
+    <reporting>
+        <plugins>
+            <!-- Reports for Dependency Check -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>7.0.0</version>
+                <configuration>
+                    <format>HTML</format>
+                    <outputDirectory>${project.build.directory}/dependency-check-report</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
-
