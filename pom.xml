@@ -2,112 +2,79 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <!-- Basic Project Information -->
+    
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>my-maven-app</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>my-web-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!-- Maven Repositories -->
-    <repositories>
-        <repository>
-            <id>nexus-public</id>
-            <url>http://nexus-server/repository/maven-public/</url>
-        </repository>
-    </repositories>
+    <name>my-web-app</name>
+    <url>http://www.example.com</url>
 
-    <!-- Build Plugins -->
+    <properties>
+        <java.version>17</java.version>
+        <spring.boot.version>2.7.18</spring.boot.version> <!-- Updated to the latest LTS version -->
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin -->
+            <!-- Maven Compiler Plugin for Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version> <!-- Updated to the latest LTS version -->
                 <configuration>
-                    <source>11</source> <!-- Java version used in your project -->
-                    <target>11</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 
-            <!-- Maven Deploy Plugin (for Nexus artifact deployment) -->
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Docker Maven Plugin (to build Docker images from Maven) -->
+            <!-- OWASP Dependency-Check Plugin -->
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.1.0</version>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>8.3.0</version> <!-- Updated to the latest LTS version -->
+                <configuration>
+                    <dataDirectory>${project.build.directory}/dependency-check-data</dataDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>build</goal>  <!-- This builds the Docker image -->
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <imageName>my-maven-image</imageName>  <!-- Docker image name -->
-                    <dockerDirectory>${project.basedir}</dockerDirectory>  <!-- Directory containing Dockerfile -->
-                </configuration>
             </plugin>
-
-            <!-- SonarQube Plugin for code quality analysis -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version>
-            </plugin>
-
         </plugins>
     </build>
-
-    <!-- Maven Profiles (Optional - for different environments or deployment stages) -->
-    <profiles>
-        <profile>
-            <id>deploy-to-nexus</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Nexus Repository Configuration -->
-                <nexus.repoUrl>http://nexus-server/repository/maven-releases/</nexus.repoUrl>
-                <nexus.username>${env.NEXUS_USERNAME}</nexus.username>
-                <nexus.password>${env.NEXUS_PASSWORD}</nexus.password>
-            </properties>
-        </profile>
-    </profiles>
-
-    <!-- Nexus Deployment Configuration -->
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://nexus-server/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://nexus-server/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <!-- Properties -->
-    <properties>
-        <java.version>11</java.version> <!-- Java version -->
-        <sonar.host.url>http://sonarqube-server</sonar.host.url>  <!-- SonarQube server URL -->
-    </properties>
-
 </project>
-
